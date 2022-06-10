@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.photogalery.api.FlickrApi
-import com.example.photogalery.api.FlickrResponse
-import com.example.photogalery.api.PhotoResponse
+import com.example.photogalery.model.FlickrResponse
+import com.example.photogalery.model.PhotoResponse
+import com.example.photogalery.model.GalleryItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +19,7 @@ class FlickrFetchr {
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("https://api.flickr.com/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -56,5 +57,6 @@ class FlickrFetchr {
 
     companion object {
         private const val TAG = "FlickrFetchr"
+        private const val BASE_URL = "https://api.flickr.com/"
     }
 }

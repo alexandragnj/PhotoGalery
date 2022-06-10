@@ -1,6 +1,6 @@
-package com.example.photogalery.api
+package com.example.photogalery.model
 
-import com.example.photogalery.GalleryItem
+import com.example.photogalery.model.GalleryItem
 import com.google.gson.annotations.SerializedName
 
 class PhotoResponse {
