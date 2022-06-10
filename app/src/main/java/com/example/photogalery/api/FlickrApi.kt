@@ -9,7 +9,7 @@ interface FlickrApi {
         "services/rest/?method=flickr.interestingness.getList" +
                 "&api_key=1cf0ad9cddf73538f5fc5fdf681e3d6c" +
                 "&format=json" +
-                "&nonjsoncallback=1" +
+                "&nojsoncallback=1" +
                 "&extras=url_s"
     )
     fun fetchPhotos(): Call<FlickrResponse>

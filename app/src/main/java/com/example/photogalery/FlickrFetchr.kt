@@ -6,21 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import com.example.photogalery.api.FlickrApi
 import com.example.photogalery.api.FlickrResponse
 import com.example.photogalery.api.PhotoResponse
-import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Headers
 
 class FlickrFetchr {
 
     private val flickrApi: FlickrApi
-
-   /* val gson = GsonBuilder()
-        .setLenient()
-        .create()*/
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()

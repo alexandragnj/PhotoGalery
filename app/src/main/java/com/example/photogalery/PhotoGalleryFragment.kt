@@ -5,46 +5,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Gallery
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.photogalery.api.FlickrApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
-class PhotoGalleryFragment : Fragment() {
+class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
 
     private lateinit var photoRecyclerView: RecyclerView
+    private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val flickrLiveData: LiveData<List<GalleryItem>> = FlickrFetchr().fetchPhotos()
-        flickrLiveData.observe(
-            this,
-            Observer { galleryItems ->
-                Log.d(TAG, "Response received: $galleryItems")
-            }
-        )
+        photoGalleryViewModel = ViewModelProvider(this).get(PhotoGalleryViewModel::class.java)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
         photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
-        return view
+        photoGalleryViewModel.galleryItemLiveData.observe(
+            viewLifecycleOwner
+        ) { galleryItems ->
+            Log.d(TAG, "Have gallery items from ViewModel $galleryItems")
+            photoRecyclerView.adapter = PhotoAdapter(galleryItems)
+        }
     }
 
     companion object {
