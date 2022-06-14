@@ -14,14 +14,14 @@ class PhotoAdapter(private val galleryItem: List<GalleryItem>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
-        val textView=TextView(parent.context)
+        val textView = TextView(parent.context)
         return PhotoHolder(textView)
     }
 
     override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
-        val galleryItem=galleryItem[position]
+        val galleryItem = galleryItem[position]
         holder.bindTitle(galleryItem.title)
     }
 
-    override fun getItemCount(): Int =galleryItem.size
+    override fun getItemCount(): Int = galleryItem.size
 }

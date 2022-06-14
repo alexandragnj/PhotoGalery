@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.photogalery.api.FlickrApi
 import com.example.photogalery.model.FlickrResponse
-import com.example.photogalery.model.PhotoResponse
 import com.example.photogalery.model.GalleryItem
+import com.example.photogalery.model.PhotoResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +53,6 @@ class FlickrFetchr {
         })
         return responseLiveData
     }
-
 
     companion object {
         private const val TAG = "FlickrFetchr"
