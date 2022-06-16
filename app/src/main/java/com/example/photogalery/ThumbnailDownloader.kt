@@ -21,7 +21,7 @@ class ThumbnailDownloader<in T : Any>(
             start()
             looper
         } else
-            if (event == Lifecycle.Event.ON_PAUSE) {
+            if (event == Lifecycle.Event.ON_DESTROY) {
                 Log.i(TAG, "Destroying background thread")
                 quit()
             }
