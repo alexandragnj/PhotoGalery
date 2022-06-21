@@ -1,25 +1,31 @@
 package com.example.photogalery
 
-import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.photogalery.model.GalleryItem
 
 class PhotoAdapter(
     private val galleryItem: List<GalleryItem>,
-    private val thumbnailDownloader: ThumbnailDownloader<PhotoHolder>,
-    private val context: Context
 ) :
     RecyclerView.Adapter<PhotoAdapter.PhotoHolder>() {
 
-    class PhotoHolder(itemImageView: ImageView) : RecyclerView.ViewHolder(itemImageView) {
+    class PhotoHolder(item: View) : RecyclerView.ViewHolder(item) {
 
-        val bindDrawable: (Drawable) -> Unit = itemImageView::setImageDrawable
+        private val itemImageView: ImageView = item.findViewById(R.id.image_recycler)
+
+        fun bindImage(galleryItem: GalleryItem) {
+            val url = galleryItem.url
+            Glide.with(itemImageView)
+                .load(url)
+                .placeholder(R.drawable.bill_up_close)
+                .error(R.drawable.bill_up_close)
+                .fallback(R.drawable.bill_up_close)
+                .into(itemImageView)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
@@ -30,14 +36,7 @@ class PhotoAdapter(
 
     override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
         val galleryItem = galleryItem[position]
-        val placeholder: Drawable = ContextCompat.getDrawable(
-            context,
-            R.drawable.bill_up_close
-        ) ?: ColorDrawable()
-        holder.bindDrawable(
-            placeholder
-        )
-        thumbnailDownloader.queueThumbnail(holder, galleryItem.url)
+        holder.bindImage(galleryItem)
     }
 
     override fun getItemCount(): Int = galleryItem.size

@@ -1,9 +1,6 @@
 package com.example.photogalery
 
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -20,7 +17,6 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
 
     private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
-    private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoAdapter.PhotoHolder>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,20 +25,10 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
 
         photoGalleryViewModel = ViewModelProvider(this).get(PhotoGalleryViewModel::class.java)
 
-        val responseHandler = Handler(Looper.getMainLooper())
-        thumbnailDownloader = ThumbnailDownloader(responseHandler) { photoHolder, bitmap ->
-            val drawable = BitmapDrawable(resources, bitmap)
-            photoHolder.bindDrawable(drawable)
-        }
-        lifecycle.addObserver(thumbnailDownloader.fragmentLifecycleObserver)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.lifecycle.addObserver(
-            thumbnailDownloader.viewLifecycleObserver
-        )
 
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
         photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
@@ -52,20 +38,8 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
         ) { galleryItems ->
             Log.d(TAG, "Have gallery items from ViewModel $galleryItems")
             photoRecyclerView.adapter =
-                PhotoAdapter(galleryItems, thumbnailDownloader, requireContext())
+                PhotoAdapter(galleryItems)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewLifecycleOwner.lifecycle.removeObserver(
-            thumbnailDownloader.viewLifecycleObserver
-        )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        lifecycle.removeObserver(thumbnailDownloader.fragmentLifecycleObserver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -100,7 +74,7 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_item_search -> {
+            R.id.menu_item_clear -> {
                 photoGalleryViewModel.fetchPhotos("")
                 true
             }

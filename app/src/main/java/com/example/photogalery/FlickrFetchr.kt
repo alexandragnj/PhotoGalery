@@ -1,9 +1,6 @@
 package com.example.photogalery
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.photogalery.api.FlickrApi
@@ -12,7 +9,6 @@ import com.example.photogalery.model.FlickrResponse
 import com.example.photogalery.model.GalleryItem
 import com.example.photogalery.model.PhotoResponse
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +37,7 @@ class FlickrFetchr {
         return fetchPhotoMetadata(flickrApi.fetchPhotos())
     }
 
-    fun searchPhotos(query: String): LiveData<List<GalleryItem>>{
+    fun searchPhotos(query: String): LiveData<List<GalleryItem>> {
         return fetchPhotoMetadata(flickrApi.searchPhotos(query))
     }
 
@@ -70,14 +66,6 @@ class FlickrFetchr {
             }
         })
         return responseLiveData
-    }
-
-    @WorkerThread
-    fun fetchPhoto(url: String): Bitmap? {
-        val response: Response<ResponseBody> = flickrApi.fetchUrlBytes(url).execute()
-        val bitmap = response.body()?.byteStream()?.use(BitmapFactory::decodeStream)
-        Log.i(TAG, "Decoded bitmap=$bitmap from Response=$response")
-        return bitmap
     }
 
     companion object {
