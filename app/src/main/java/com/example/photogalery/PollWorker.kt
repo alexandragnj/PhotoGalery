@@ -2,7 +2,9 @@ package com.example.photogalery
 
 import android.app.PendingIntent
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
@@ -13,6 +15,7 @@ import com.example.photogalery.model.GalleryItem
 class PollWorker(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun doWork(): Result {
         val query = QueryPreferences.getStoredQuery(context)
         val lastResultId = QueryPreferences.getLastResultId(context)
@@ -42,7 +45,14 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             QueryPreferences.setLastResultId(context, resultId)
 
             val intent = PhotoGalleryActivity.newIntent(context)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+           // val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+            val pendingIntent: PendingIntent? =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+            } else {
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            }
 
             val resources = context.resources
             val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
