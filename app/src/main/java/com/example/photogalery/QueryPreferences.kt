@@ -1,18 +1,19 @@
 package com.example.photogalery
 
 import android.content.Context
+import androidx.preference.PreferenceManager
 
 private const val PREF_SEARCH_QUERY = "searchQuery"
 
 object QueryPreferences {
 
     fun getStoredQuery(context: Context): String? {
-        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         return prefs.getString(PREF_SEARCH_QUERY, "")
     }
 
     fun setStoredQuery(context: Context, query: String) {
-        androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putString(PREF_SEARCH_QUERY, query)
             .apply()
