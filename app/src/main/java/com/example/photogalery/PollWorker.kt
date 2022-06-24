@@ -45,7 +45,6 @@ class PollWorker(private val context: Context, workerParams: WorkerParameters) :
             QueryPreferences.setLastResultId(context, resultId)
 
             val intent = PhotoGalleryActivity.newIntent(context)
-           // val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             val pendingIntent: PendingIntent? =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
