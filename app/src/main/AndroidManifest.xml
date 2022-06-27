@@ -4,7 +4,7 @@
 
     <permission
         android:name="com.example.photogalery.PRIVATE"
-        android:protectionLevel="normal" />
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.example.photogalery.PRIVATE" />
@@ -30,7 +30,7 @@
             android:name=".NotificationReceiver"
             android:exported="false"
             android:permission="com.example.photogalery.PRIVATE">
-            <intent-filter>
+            <intent-filter android:priority="-999">
                 <action android:name="com.example.photogalery.SHOW_NOTIFICATION" />
             </intent-filter>
         </receiver>
