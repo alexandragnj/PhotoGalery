@@ -7,10 +7,8 @@ import android.util.Log
 
 class NotificationReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent != null) {
-            Log.i(TAG, "received broadcast: ${intent.action}")
-        }
+    override fun onReceive(context: Context?, intent: Intent) {
+        Log.i(TAG, "received broadcast: ${intent.action}")
     }
 
     companion object {
