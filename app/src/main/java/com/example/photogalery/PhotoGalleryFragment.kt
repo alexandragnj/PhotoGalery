@@ -2,19 +2,15 @@ package com.example.photogalery
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
-class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
+class PhotoGalleryFragment : PollNotificationHandlerFragment(R.layout.fragment_photo_gallery) {
 
     private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
@@ -90,7 +86,7 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
             R.id.menu_item_toggle_polling -> {
                 val isPolling = QueryPreferences.isPolling(requireContext())
                 if (isPolling) {
-                    WorkManager.getInstance().cancelUniqueWork(POLL_WORK)
+                    context?.let { WorkManager.getInstance(it).cancelUniqueWork(POLL_WORK) }
                     QueryPreferences.setPolling(requireContext(), false)
                 } else {
                     val constraints = Constraints.Builder()
@@ -100,11 +96,13 @@ class PhotoGalleryFragment : Fragment(R.layout.fragment_photo_gallery) {
                         .Builder(PollWorker::class.java, 15, TimeUnit.MINUTES)
                         .setConstraints(constraints)
                         .build()
-                    WorkManager.getInstance().enqueueUniquePeriodicWork(
-                        POLL_WORK,
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        periodicRequest
-                    )
+                    context?.let {
+                        WorkManager.getInstance(it).enqueueUniquePeriodicWork(
+                            POLL_WORK,
+                            ExistingPeriodicWorkPolicy.KEEP,
+                            periodicRequest
+                        )
+                    }
                     QueryPreferences.setPolling(requireContext(), true)
                 }
                 activity?.invalidateOptionsMenu()
