@@ -13,9 +13,26 @@ class PhotoAdapter(
 ) :
     RecyclerView.Adapter<PhotoAdapter.PhotoHolder>() {
 
-    class PhotoHolder(item: View) : RecyclerView.ViewHolder(item) {
+    class PhotoHolder(item: View) : RecyclerView.ViewHolder(item), View.OnClickListener {
+
+        private lateinit var galleryItem: GalleryItem
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         private val itemImageView: ImageView = item.findViewById(R.id.image_recycler)
+
+        fun bindGalleryItem(item: GalleryItem) {
+            galleryItem = item
+        }
+
+        override fun onClick(view: View?) {
+            val context = view?.context
+            //val intent = Intent(Intent.ACTION_VIEW, galleryItem.photoPageUri)
+            val intent= context?.let { PhotoPageActivity.newIntent(it, galleryItem.photoPageUri) }
+            context?.startActivity(intent)
+        }
 
         fun bindImage(galleryItem: GalleryItem) {
             val url = galleryItem.url
@@ -37,6 +54,7 @@ class PhotoAdapter(
     override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
         val galleryItem = galleryItem[position]
         holder.bindImage(galleryItem)
+        holder.bindGalleryItem(galleryItem)
     }
 
     override fun getItemCount(): Int = galleryItem.size

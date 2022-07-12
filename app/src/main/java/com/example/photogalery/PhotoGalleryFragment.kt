@@ -2,18 +2,23 @@ package com.example.photogalery
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.View
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
+import com.example.photogalery.databinding.FragmentPhotoGalleryBinding
 import java.util.concurrent.TimeUnit
 
 class PhotoGalleryFragment : PollNotificationHandlerFragment(R.layout.fragment_photo_gallery) {
 
-    private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
+    private lateinit var binding: FragmentPhotoGalleryBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,17 +28,26 @@ class PhotoGalleryFragment : PollNotificationHandlerFragment(R.layout.fragment_p
         photoGalleryViewModel = ViewModelProvider(this).get(PhotoGalleryViewModel::class.java)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPhotoGalleryBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
-        photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
+        binding.photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
         photoGalleryViewModel.galleryItemLiveData.observe(
             viewLifecycleOwner
         ) { galleryItems ->
             Log.d(TAG, "Have gallery items from ViewModel $galleryItems")
-            photoRecyclerView.adapter =
+            binding.photoRecyclerView.adapter =
                 PhotoAdapter(galleryItems)
         }
     }
