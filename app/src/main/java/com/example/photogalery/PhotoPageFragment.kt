@@ -41,25 +41,30 @@ class PhotoPageFragment : PollNotificationHandlerFragment(R.layout.fragment_phot
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadingIntoWebView() {
-        binding.progressBar.max = 100
 
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(webView: WebView?, newProgress: Int) {
-                if (newProgress == 100) {
-                    binding.progressBar.visibility = View.GONE
-                } else {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.progressBar.progress = newProgress
+        with(binding){
+            progressBar.max = 100
+            webView.apply {
+                settings.javaScriptEnabled = true
+                webChromeClient = object : WebChromeClient() {
+                    override fun onProgressChanged(webView: WebView?, newProgress: Int) {
+                        if (newProgress == 100) {
+                            binding.progressBar.visibility = View.GONE
+                        } else {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.progressBar.progress = newProgress
+                        }
+                    }
+
+                    override fun onReceivedTitle(view: WebView?, title: String?) {
+                        (activity as AppCompatActivity).supportActionBar?.subtitle = title
+                    }
                 }
-            }
 
-            override fun onReceivedTitle(view: WebView?, title: String?) {
-                (activity as AppCompatActivity).supportActionBar?.subtitle = title
+                webViewClient = WebViewClient()
+                loadUrl(uri.toString())
             }
         }
-        binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl(uri.toString())
     }
 
     companion object {
